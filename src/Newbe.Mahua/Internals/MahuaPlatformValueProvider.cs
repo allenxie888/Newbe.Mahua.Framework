@@ -16,6 +16,7 @@ namespace Newbe.Mahua.Internals
                     {
                         new CqpPlatformResolver(),
                         new MpqPlatformResolver(),
+                        new QqLightPlatformResolver(),
                         new AmandaPlatformResolver()
                     }
                     .FirstOrDefault(x => x.IsThis())?.MahuaPlatform;
@@ -61,6 +62,17 @@ namespace Newbe.Mahua.Internals
             {
                 var currentDir = GetCurrentDir();
                 return File.Exists(Path.Combine(currentDir, "Amanda.exe"));
+            }
+        }
+
+        private class QqLightPlatformResolver : IPlatformResolver
+        {
+            public MahuaPlatform MahuaPlatform { get; } = MahuaPlatform.QqLight;
+
+            public bool IsThis()
+            {
+                var currentDir = GetCurrentDir();
+                return File.Exists(Path.Combine(currentDir, "QQLight.exe"));
             }
         }
 

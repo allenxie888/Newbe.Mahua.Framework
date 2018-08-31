@@ -4,6 +4,7 @@ using Newbe.Mahua.Apis;
 using Newbe.Mahua.CQP;
 using Newbe.Mahua.CQP.ApiExtensions;
 using Newbe.Mahua.MPQ;
+using Newbe.Mahua.QQLight;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -21,6 +22,7 @@ namespace Newbe.Mahua.ApiMahuaCommandFinder
                 {MahuaPlatform.Cqp, typeof(CqpMahuaModule).Assembly},
                 {MahuaPlatform.Mpq, typeof(MpqMahuaModule).Assembly},
                 {MahuaPlatform.Amanda, typeof(AmandaMahuaModule).Assembly},
+                {MahuaPlatform.QqLight, typeof(QqLightMahuaModule).Assembly},
             };
 
             var extensions = new Dictionary<MahuaPlatform, Assembly>

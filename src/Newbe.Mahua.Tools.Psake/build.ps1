@@ -13,6 +13,7 @@ $pkgNames = @{
     "platform"  = @(
         "Newbe.Mahua.CQP",
         "Newbe.Mahua.Amanda",
+        "Newbe.Mahua.QQLight",
         "Newbe.Mahua.MPQ"
     )
     "framework" = @(
@@ -175,6 +176,28 @@ Task PackCQP -depends DonwloadPackages, Build -Description "CQP打包" {
     }
 }
 
+Task PackQQLight -depends DonwloadPackages, Build -Description "QQLight打包" {
+    $InstalledPlatforms | Where-Object {$_.id -eq "Newbe.Mahua.QQLight"}  | ForEach-Object {
+        Exec {
+            $toolBase = Get-Download-Package-ToolsDir -package $_
+            New-Item -ItemType Directory "$releaseBase\QQLight"
+            New-Item -ItemType Directory "$releaseBase\QQLight\$pluginName"
+            New-Item -ItemType Directory "$releaseBase\QQLight\plugin"
+            Copy-FrameworkItems -dest "$releaseBase\QQLight\"
+            Copy-Item -Path  "$toolBase\NewbeLibs\Platform\CLR\*" -Destination "$releaseBase\QQLight" -Recurse
+            Copy-FrameworkExtensionItems -dest "$releaseBase\QQLight\$pluginName"
+            Copy-Item -Path "$releaseBase\$configuration\*", "$toolBase\NewbeLibs\Platform\CLR\*"   -Destination "$releaseBase\QQLight\$pluginName" -Recurse
+            Copy-Item -Path "$toolBase\NewbeLibs\Platform\Native\Newbe.Mahua.QQLight.Native.dll" -Destination  "$releaseBase\QQLight\plugin\$pluginName.plugin.dll"
+
+            Copy-Item "$releaseBase\QQLight\$pluginName" "$releaseBase\QQLight\$assetDirName\$pluginName" -Recurse
+            Get-ChildItem "$releaseBase\QQLight\$assetDirName\$pluginName" | Get-FileHash | Out-File "$releaseBase\hash.txt"
+            Copy-Item "$releaseBase\hash.txt" "$releaseBase\QQLight\$assetDirName\$pluginName\hash.txt"
+            Remove-Item "$releaseBase\hash.txt"
+            Remove-Item "$releaseBase\QQLight\$pluginName" -Recurse
+        }
+    }
+}
+
 Task PackAmanda -depends DonwloadPackages, Build -Description "Amanda打包" {
     $InstalledPlatforms | Where-Object {$_.id -eq "Newbe.Mahua.Amanda"}  | ForEach-Object {
         Exec {
@@ -219,7 +242,7 @@ Task PackMPQ -depends DonwloadPackages, Build -Description "MPQ打包" {
     }
 }
 
-Task Pack -depends PackCQP, PackAmanda, PackMPQ -Description "打包" {
+Task Pack -depends PackCQP, PackAmanda, PackMPQ, PackQQLight -Description "打包" {
     Write-Output "构建完毕，当前时间为 $(Get-Date)"
 }
 
